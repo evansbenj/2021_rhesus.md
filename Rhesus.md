@@ -18,4 +18,6 @@ M. assamensis SRR2981114
 M. thibetana SRR1024051
 
 M. fasc Mauritius male SRR1564766	
+
+M. fasc Thai DRR219371	
 ```
