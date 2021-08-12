@@ -104,3 +104,21 @@ m.R1.fq.gz ${file::-11}_trim.R1_single.fq.gz ${file::-11}_trim.R2.fq.gz ${file::
   fi
 done 
 ```
+
+# Map to ref
+```
+sbatch 2021_bwa_samtools_map_to_ref.sh /home/ben/projects/rrg-ben/ben/2021_rhemac_v10/rheMac10.fa ../data/SRA023855_M_fasc_Viet
+```
+# add readgroups
+```
+
+```
+# Genotype each individual
+```
+sbatch 2021_HaplotypeCaller.sh ../../2021_rhemac_v10/rheMac10.fa ../data/DRR219371_M_fasc_Thai/ chr1
+```
+# Combine gvcfs
+
+# VariantFiltration
+
+# SelectVariants
