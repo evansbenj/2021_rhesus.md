@@ -119,6 +119,95 @@ sbatch 2021_HaplotypeCaller.sh ../../2021_rhemac_v10/rheMac10.fa ../data/DRR2193
 ```
 # Combine gvcfs
 
+# Genotype gvcfs
+```
+#!/bin/sh
+#SBATCH --job-name=genotypeGVFs
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=96:00:00
+#SBATCH --mem=32gb
+#SBATCH --output=genotypeGVFs.%J.out
+#SBATCH --error=genotypeGVFs.%J.err
+#SBATCH --account=def-ben
+
+
+# This script will read in the *.g.vcf file names in a directory, and 
+# make and execute the GATK command "GenotypeGVCFs" on these files. 
+
+# execute like this:
+# sbatch 2021_GenotypeGVCFs.sh /home/ben/projects/rrg-ben/ben/2020_XL_v9.2_refgenome/XENLA_9.2_genome.fa /home/ben/projec
+ts/rrg-ben/ben/2020_GBS_muel_fish_allo_cliv_laev/raw_data/cutaddapted_by_species_across_three_plates/clivii/ chr1L
+
+module load nixpkgs/16.09 gatk/4.1.0.0
+
+commandline="gatk --java-options -Xmx24G GenotypeGVCFs -R ${1}"
+for file in ${2}*g.vcf
+do
+    commandline+=" -V ${file}"
+done
+
+commandline+=" -L ${3} -O ${2}allsites_${3}.vcf.gz"
+
+${commandline}
+```
+
 # VariantFiltration
 
+```
+#!/bin/sh
+#SBATCH --job-name=VariantFiltration
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=36:00:00
+#SBATCH --mem=10gb
+#SBATCH --output=VariantFiltration.%J.out
+#SBATCH --error=VariantFiltration.%J.err
+#SBATCH --account=def-ben
+
+
+# This script will read in the *gvcf file names in a directory, and 
+# make and execute the GATK command "VariantFiltration" on these files. 
+
+# execute like this:
+# sbatch 2021_VariantFiltration.sh ../maq_vcfs_after_genotyping/before_filtering/maq_allsites_chr1.g.vcf.gz_chr1.vcf.gz
+
+module load nixpkgs/16.09 gatk/4.1.0.0
+
+gatk --java-options -Xmx8G VariantFiltration -V ${1}\
+    -filter "QD < 2.0" --filter-name "QD2" \
+    -filter "QUAL < 30.0" --filter-name "QUAL30" \
+    -filter "SOR > 3.0" --filter-name "SOR3" \
+    -filter "FS > 60.0" --filter-name "FS60" \
+    -filter "MQ < 40.0" --filter-name "MQ40" \
+    -filter "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+    -filter "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+    -O ${1}_filtered.vcf.gz
+ ```
+
 # SelectVariants
+```
+#!/bin/sh
+#SBATCH --job-name=SelectVariants
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=36:00:00
+#SBATCH --mem=10gb
+#SBATCH --output=SelectVariants.%J.out
+#SBATCH --error=SelectVariants.%J.err
+#SBATCH --account=def-ben
+
+
+# This script will read in the *gvcf file names in a directory, and 
+# make and execute the GATK command "SelectVariants" on these files. 
+
+# execute like this:
+# sbatch 2021_SelectVariants.sh ../maq_vcfs_after_genotyping/maq_allsites_chr10.g.vcf.gz_chr10.vcf.gz_filtered.vcf.gz
+
+module load nixpkgs/16.09 gatk/4.1.0.0
+
+gatk --java-options -Xmx8G SelectVariants \
+        --exclude-filtered \
+        -V ${1} \
+        -O ${1}_filtered_removed.vcf
+```	
