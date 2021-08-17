@@ -118,6 +118,34 @@ sbatch 2021_bwa_samtools_map_to_ref.sh /home/ben/projects/rrg-ben/ben/2021_rhema
 sbatch 2021_HaplotypeCaller.sh ../../2021_rhemac_v10/rheMac10.fa ../data/DRR219371_M_fasc_Thai/ chr1
 ```
 # Combine gvcfs
+```
+#!/bin/sh
+#SBATCH --job-name=combineGVCFs
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=164:00:00
+#SBATCH --mem=12gb
+#SBATCH --output=combineGVCFs.%J.out
+#SBATCH --error=combineGVCFs.%J.err
+#SBATCH --account=def-ben
+
+
+# This script will read in the *.g.vcf file names in a directory, and 
+# make and execute the GATK command "GenotypeGVCFs" on these files. 
+
+# execute like this:
+# sbatch 2021_combineGVCFs.sh path_to_file chr
+
+module load nixpkgs/16.09 gatk/4.1.0.0
+
+commandline="gatk --java-options -Xmx10G CombineGVCFs -R ${1}"
+for file in ${2}/*${3}*g.vcf
+do
+    commandline+=" -V ${file}"
+done
+
+commandline+=" -O ${2}/${3}_allsamples.g.vcf.gz"
+```
 
 # Genotype gvcfs
 ```
