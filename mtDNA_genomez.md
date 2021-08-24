@@ -1,6 +1,6 @@
 # Trying to map reads, extract mapped reads, and do denovo assembly.
 
-# Trim ends
+## Trim ends
 ```
 #!/bin/sh
 #SBATCH --job-name=trimmomatic
@@ -67,8 +67,27 @@ for file in ${2}/*_trim.R1.fq.gz ; do         # Use ./* ... NEVER bare *
 done
 ```
 
-#Extract mapped reads from bam files 
+##Extract mapped reads from bam files 
 Using bam2fastq (https://github.com/jts/bam2fastq)
 ```
 ./bam2fastq --aligned --force --strict -o mapped#.fq ../SRR9611188_trim._sorted.bam 
+```
+## NOVOplasty
+```
+#!/bin/sh
+#SBATCH --job-name=NOVOplasty
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=6:00:00
+#SBATCH --mem=128gb
+#SBATCH --output=NOVOplasty.%J.out
+#SBATCH --error=NOVOplasty.%J.err
+#SBATCH --account=def-ben
+
+
+# This script will run NOVOplasty
+# run like this sbatch 2021_NOVOplasty.sh config_file
+module load StdEnv/2020 perl/5.30.2
+
+perl NOVOPlasty4.3.1.pl -c ${1}
 ```
