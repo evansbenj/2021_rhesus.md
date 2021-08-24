@@ -34,7 +34,7 @@ and_3-PE-2.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36
   fi
 done 
 ```
-# Map reads
+## Map reads
 ```
 #!/bin/sh
 #SBATCH --job-name=bwa_align
@@ -67,7 +67,7 @@ for file in ${2}/*_trim.R1.fq.gz ; do         # Use ./* ... NEVER bare *
 done
 ```
 
-##Extract mapped reads from bam files 
+## Extract mapped reads from bam files 
 Using bam2fastq (https://github.com/jts/bam2fastq)
 ```
 ./bam2fastq --aligned --force --strict -o mapped#.fq ../SRR9611188_trim._sorted.bam 
