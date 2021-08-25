@@ -85,7 +85,7 @@ module load samtools/1.10
 samtools view -u -f 1 -F 12 SRR9611188_trim._sorted.bam > SRR9611188_trim._sorted_mapped_only.bam
 ```
 
-## Extract mapped reads from bam files 
+## Extract mapped reads from bam file that has only mapped reads
 Using bam2fastq (https://github.com/jts/bam2fastq)
 ```
 ./bam2fastq --aligned --force --strict -o mapped#.fq ../SRR9611188_trim._sorted_mapped_only.bam 
