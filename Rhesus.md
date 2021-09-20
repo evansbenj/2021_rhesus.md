@@ -104,6 +104,48 @@ m.R1.fq.gz ${file::-11}_trim.R1_single.fq.gz ${file::-11}_trim.R2.fq.gz ${file::
   fi
 done 
 ```
+# index the reference genome
+```
+#!/bin/sh
+#SBATCH --job-name=bwa_index
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=4
+#SBATCH --time=8:00:00
+#SBATCH --mem=24gb
+#SBATCH --output=index_genome.%J.out
+#SBATCH --error=index_genome.%J.err
+#SBATCH --account=def-ben
+
+# sbatch 2021_index_genome.sh path_to_genome/name_of_genome
+
+module load bwa/0.7.17
+module load samtools/1.10
+
+
+bwa index ${1}
+samtools faidx ${1}
+```
+```
+#!/bin/sh
+#SBATCH --job-name=index
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=24:00:00
+#SBATCH --mem=8gb
+#SBATCH --output=index.%J.out
+#SBATCH --error=index.%J.err
+#SBATCH --account=def-ben
+
+# run by passing an argument like this
+# sbatch ./2021_picard_dict_file.sh path_to_reference_genome/reference_genome (without the `.fa` suffix)
+
+module load picard/2.23.3
+
+# make a .dict file
+java -jar $EBROOTPICARD/picard.jar CreateSequenceDictionary REFERENCE=${1}.fa OUTPUT=${1}.dict
+
+
+```
 
 # Map to ref
 ```
