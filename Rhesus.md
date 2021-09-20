@@ -109,6 +109,34 @@ done
 ```
 sbatch 2021_bwa_samtools_map_to_ref.sh /home/ben/projects/rrg-ben/ben/2021_rhemac_v10/rheMac10.fa ../data/SRA023855_M_fasc_Viet
 ```
+```
+#!/bin/sh
+#SBATCH --job-name=bwa_align
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=4
+#SBATCH --time=167:00:00
+#SBATCH --mem=30gb
+#SBATCH --output=bwa_align.%J.out
+#SBATCH --error=bwa_align.%J.err
+#SBATCH --account=def-ben
+
+# run by passing an argument like this (in the directory with the files)
+# sbatch 2020_align_paired_fq_to_ref.sh pathandname_of_ref path_to_paired_fq_filez 
+
+
+module load StdEnv/2020 bwa/0.7.17
+module load samtools/1.10
+
+
+for file in ${2}/*.R1.fixed.fq.gz ; do         # Use ./* ... NEVER bare *    
+    if [ -e "$file" ] ; then   # Check whether file exists.
+	bwa mem ${1} ${file::-15}.R1.fixed.fq.gz ${file::-15}.R2.fixed.fq.gz -t 16 | samtools view -Shu - | samtools s
+ort - -o ${file::-15}_sorted.bam
+	samtools index ${file::-15}_sorted.bam
+  fi
+done
+```
+
 # add readgroups
 ```
 #!/bin/sh
