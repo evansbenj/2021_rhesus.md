@@ -111,12 +111,59 @@ sbatch 2021_bwa_samtools_map_to_ref.sh /home/ben/projects/rrg-ben/ben/2021_rhema
 ```
 # add readgroups
 ```
+#!/bin/sh
+#SBATCH --job-name=readgroups
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=24:00:00
+#SBATCH --mem=8gb
+#SBATCH --output=readgroups.%J.out
+#SBATCH --error=readgroups.%J.err
+#SBATCH --account=def-ben
+
+# run by passing an argument like this
+# sbatch ./2021_picard_add_read_groups.sh ../path/
+
+module load picard/2.23.3
+
+for file in ${1}*_sorted.bam
+do
+    java -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups I=${file} O=${file}_rg.bam RGID=4 RGLB=$(basename $file)
+ RGPL=ILLUMINA RGPU=$(basename $file) RGSM=$(basename $file)
+done
 
 ```
 # Genotype each individual
 ```
 sbatch 2021_HaplotypeCaller.sh ../../2021_rhemac_v10/rheMac10.fa ../data/DRR219371_M_fasc_Thai/ chr1
 ```
+```
+#!/bin/sh
+#SBATCH --job-name=HaplotypeCaller
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=36:00:00
+#SBATCH --mem=10gb
+#SBATCH --output=HaplotypeCaller.%J.out
+#SBATCH --error=HaplotypeCaller.%J.err
+#SBATCH --account=def-ben
+
+
+# This script will read in the *_sorted.bam file names in a directory, and 
+# make and execute the GATK command "RealignerTargetCreator" on these files. 
+
+# execute like this:
+# sbatch 2021_HaplotypeCaller.sh /home/ben/projects/rrg-ben/ben/2021_rhemac_v10/rheMac10.fa.sa path chr
+
+module load nixpkgs/16.09 gatk/4.1.0.0
+
+for file in ${2}*_sorted.bam_rg.bam
+do
+    gatk --java-options -Xmx8G HaplotypeCaller  -I ${file} -R ${1} -L ${3} -O ${file}_${3}.g.vcf -ERC GVCF
+done
+```
+
+
 # Combine gvcfs
 ```
 #!/bin/sh
