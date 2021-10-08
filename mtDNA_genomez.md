@@ -448,3 +448,40 @@ ATACCCTATCATCTATAGGCTCCTTCATCTCACTAGTAGCAGTAATTTTAATAATCTACATGATCTGAGAAGCCTTTGCT
 TAGAGTGACTAAATGGCTGCCCCCCGC
 CTTATCACACATTCGAAGAACCACCCTACATTAAACTAGTCGAAAAAGGAGGGAGTCGAACCCC
 ```
+
+
+# BEAST
+I'm running 8 independent runs; sbatch below.
+```
+#!/bin/sh
+#SBATCH --job-name=beast
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=5:00:00
+#SBATCH --mem-per-cpu=4000M
+#SBATCH --output=beast.%J.out
+#SBATCH --error=beast.%J.err
+#SBATCH --account=def-ben
+
+# sbatch Beast.sh file
+BEAST_MEM="-Xmx3750M"
+# Define variables where to find BEAST and BEAGLE-lib
+BEAST_LIB="${EBROOTBEAST}/lib"
+BEAST_EXTRA_LIBS="${BEAST_LIB}:${BEAGLE_LIB}"
+export LD_LIBRARY_PATH="${BEAGLE_LIB}:${LD_LIBRARY_PATH}"
+
+
+module load StdEnv/2020  gcc/9.3.0 beast/2.6.3
+module load java
+# Build a long java command:
+CMD="java -Xms256m ${BEAST_MEM}"                   # set memory
+CMD="$CMD -Djava.library.path=${BEAST_EXTRA_LIBS}" # point to libraries
+CMD="$CMD -jar ${BEAST_LIB}/launcher.jar"             # which program to execute
+
+echo ".................................."
+echo "The Java command is \"${CMD}\""
+echo ".................................."
+
+# Run the command:
+$CMD -beagle ${1}
+```
