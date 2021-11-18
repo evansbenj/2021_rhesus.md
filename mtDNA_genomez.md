@@ -485,3 +485,18 @@ echo ".................................."
 # Run the command:
 $CMD -beagle ${1}
 ```
+
+# IQtree
+
+execcutable is here:
+```
+/home/ben/projects/rrg-ben/ben/2020_GBS_muel_fish_allo_cliv_laev/bin/iqtree-1.6.12-Linux/bin/iqtree
+```
+find model only
+```
+/home/ben/projects/rrg-ben/ben/2021_M_f_aurea/iqtree -s ${1} -m MF
+```
+find ML tree under favored model (XXX) and perform 1000 bootstrap reps
+```
+/home/ben/projects/rrg-ben/ben/2021_M_f_aurea/iqtree -s ${1} -m XXX -B 1000
+```
