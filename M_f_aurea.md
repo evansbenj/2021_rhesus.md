@@ -80,7 +80,7 @@ admixfrog-ref [-h] --outfile OUTFILE [--states [STATES [STATES ...]]]
 ```
 This works make the ref file
 ```
-/home/ben/.local/bin/admixfrog-ref --vcf FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz --out FandM_chr20_mm_0.5_minQ_30_thinned.ref.xz --states AUR FAS ASS --pop-file pops.yaml 
+/home/ben/.local/bin/admixfrog-ref --vcf FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz --out FandM_chr20_mm_0.5_minQ_30_thinned.ref.xz --states AUR FAS ASS --pop-file pops.yaml --chroms chr20
 ```
 where the pops.yaml file looks like this:
 ```
