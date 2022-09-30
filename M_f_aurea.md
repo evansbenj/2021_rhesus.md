@@ -29,3 +29,14 @@ tabix -p vcf vcffile.gz
 ```
 vcftools --gzvcf maq_allsites_chr20.g.vcf.gz_chr20.vcf.gz_filtered.vcf.gz_filtered_removed.vcf.gz.recode_maxmissingcount_2.vcf.recode.vcf.gz --max-missing 0.5 --minQ 30 --recode --recode-INFO-all --out ./FandM_chr20_mm_0.5_minQ_30
 ```
+
+# check for missing data
+```
+vcftools --vcf FandM_chr1_mm_0.5_minQ_30.recode.vcf --missing-indv
+```
+check output
+```
+cat out.imiss
+```
+This shows that each of the aurea samples have very little missing data (<1.5%) which is great!
+
