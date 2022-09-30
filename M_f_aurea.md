@@ -40,3 +40,15 @@ cat out.imiss
 ```
 This shows that each of the aurea samples have very little missing data (<1.5%) which is great!
 
+So we will skip to another thinning step:
+```
+vcftools --vcf FandM_chr9_mm_0.5_minQ_30.recode.vcf --thin 500 --recode --recode-INFO-all --out FandM_chr9_mm_0.5_minQ_30_thinned
+```
+this gives us about the number of variable positions we want; e.g. for chr1:
+```
+more FandM_chr1_mm_0.5_minQ_30_thinned.log
+```
+```
+After filtering, kept 393071 out of a possible 4550779 Sites
+```
+
