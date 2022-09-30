@@ -56,3 +56,11 @@ more FandM_chr1_mm_0.5_minQ_30_thinned.log
 After filtering, kept 393071 out of a possible 4550779 Sites
 ```
 
+# compress and index
+```
+module load bcftools/1.9
+bgzip -c FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf > FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz
+bcftools index FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz
+tabix -p vcf FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz
+```
+
