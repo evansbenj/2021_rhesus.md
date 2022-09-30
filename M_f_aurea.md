@@ -64,3 +64,35 @@ bcftools index FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz
 tabix -p vcf FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz
 ```
 
+# Now create a reference file for each individual. Before running admixfrog, do this:
+
+```
+module load scipy-stack/2019b
+```
+
+then for each sample do this:
+```
+admixfrog-ref [-h] --outfile OUTFILE [--states [STATES [STATES ...]]]
+                     [--state-file STATE_FILE] [--cont-id CONT_ID]
+                     [--ancestral ANCESTRAL]
+                     [--random-read-samples [RANDOM_READ_SAMPLES [RANDOM_READ_SAMPLES ...]]]
+                     [--vcf-ref FandM_chr01_mm_0.5_minQ_30_exclude_missingness_thinned.vcf.gz
+```
+This works make the ref file
+```
+/home/ben/.local/bin/admixfrog-ref --vcf FandM_chr20_mm_0.5_minQ_30_thinned.recode.vcf.gz --out FandM_chr20_mm_0.5_minQ_30_thinned.ref.xz --states AUR FAS ASS --pop-file pops.yaml 
+```
+where the pops.yaml file looks like this:
+```
+AUR:
+    - DRR219369_trim_sorted.bam
+    - DRR219370_trim_sorted.bam
+FAS:
+    - DRR219371_trim_sorted.bam
+    - SRA023855_trim_sorted.bam
+    - SRR1564766_trim_sorted.bam
+ASS:
+    - SRR2981114_trim_sorted.bam
+THI:
+    - SRR1024051_trim_sorted.bam
+```
