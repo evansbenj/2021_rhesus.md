@@ -96,3 +96,27 @@ ASS:
 THI:
     - SRR1024051_trim_sorted.bam
 ```
+
+# Making Ref file
+This worked well for making the ref file:
+```
+#!/bin/sh
+#SBATCH --job-name=AF_ref
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=6:00:00
+#SBATCH --mem=2gb
+#SBATCH --output=AF_ref.%J.out
+#SBATCH --error=AF_ref.%J.err
+#SBATCH --account=def-ben
+
+# sbatch admixfrog_make_refs.sh chrXX
+
+# this needs to be done for each chr
+module load scipy-stack/2019b
+
+
+# make the ref file
+/home/ben/.local/bin/admixfrog-ref --vcf FandM_${1}_mm_0.5_minQ_30_thinned.recode.vcf.gz --out FandM_${1}_mm_0.5_minQ_30_thinned.recod
+e.vcf.gz.xz --states AUR FAS ASS THI --pop-file pops.yaml --chroms ${1}
+```
