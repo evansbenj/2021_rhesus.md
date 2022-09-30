@@ -159,3 +159,13 @@ cf.gz.xz --out FAS_SRR1564766_maurit.${1}.in.xz
 /home/ben/.local/bin/admixfrog-bam --bam /home/ben/projects/rrg-ben/ben/2021_M_f_aurea/data/SRR1024051_M_thib/SRR1024051_trim_sorted.bam_rg.bam --ref FandM_${1}_mm_0.5_minQ_30_thinned.recode.vcf.gz.x
 z --out THI_SRR1024051.${1}.in.xz
 ```
+
+run the analysis 
+```
+sbatch admixfrog_do_analysis_allchrs.sh nem_GumGum_female NEM SUM HEC
+sbatch admixfrog_do_analysis_allchrs.sh nem_Ngsang_sumatra_female NEM SUM HEC
+sbatch admixfrog_do_analysis_allchrs.sh nem_PM1206 NEM SUM HEC
+sbatch admixfrog_do_analysis_allchrs.sh nem_PM664 NEM SUM HEC
+sbatch admixfrog_do_analysis_allchrs.sh nem_PM665 NEM SUM HEC
+sbatch admixfrog_do_analysis_allchrs.sh nem_Sukai_male NEM SUM HEC
+```
