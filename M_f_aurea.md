@@ -169,3 +169,166 @@ sbatch admixfrog_do_analysis_allchrs.sh nem_PM664 NEM SUM HEC
 sbatch admixfrog_do_analysis_allchrs.sh nem_PM665 NEM SUM HEC
 sbatch admixfrog_do_analysis_allchrs.sh nem_Sukai_male NEM SUM HEC
 ```
+
+# Arctoides
+
+Make ref file:
+```
+#!/bin/sh
+#SBATCH --job-name=AF_ref
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=6:00:00
+#SBATCH --mem=2gb
+#SBATCH --output=AF_ref.%J.out
+#SBATCH --error=AF_ref.%J.err
+#SBATCH --account=def-ben
+
+# sbatch admixfrog_make_refs.sh chrXX
+
+# this needs to be done for each chr
+module load  nixpkgs/16.09 scipy-stack/2019b
+
+# make the ref file
+/home/ben/.local/bin/admixfrog-ref --vcf FandM_${1}_mm_1_minQ_30.recode.vcf.gz --out FandM_${1}.ref.ARC_ASS_FAS.xz --states ARC ASS
+ FAS --pop-file pops.yaml --chroms ${1}
+```
+
+Make a target
+#!/bin/sh
+#SBATCH --job-name=AF_tar
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=8:00:00
+#SBATCH --mem=2gb
+#SBATCH --output=AF_tar.%J.out
+#SBATCH --error=AF_tar.%J.err
+#SBATCH --account=def-ben
+
+module load  nixpkgs/16.09 scipy-stack/2019b
+
+# this needs to be run for each chr
+# sbatch admixfrog_make_target_ARC_vcfinput.sh chr
+
+# make the target (input) file
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target Malaya --ref FandM_${1}.ref.ARC_ASS_FAS.x
+z --out ./Malaya.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target SM1.Arctoides-1 --ref FandM_${1}.ref.ARC_
+ASS_FAS.xz --out ./SM1.Arctoides-1.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target SM2.Arctoides-2 --ref FandM_${1}.ref.ARC_
+ASS_FAS.xz --out ./SM2.Arctoides-2.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target A20 --ref FandM_${1}.ref.ARC_ASS_FAS.xz -
+-out ./A20.${1}.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target XH1.Assamensis --ref FandM_${1}.ref.ARC_A
+SS_FAS.xz --out ./XH1.Assamensis.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target Tibetan-macaque-NO.3 --ref FandM_${1}.ref
+.ARC_ASS_FAS.xz --out ./Tibetan-macaque-NO.3.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target BGI-CE-4.fascicularis --ref FandM_${1}.re
+f.ARC_ASS_FAS.xz --out ./BGI-CE-4.fascicularis.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target BGI-96346.mulatta --ref FandM_${1}.ref.AR
+C_ASS_FAS.xz --out ./BGI-96346.mulatta.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target BGI.Mulatta-1 --ref FandM_${1}.ref.ARC_AS
+S_FAS.xz --out ./BGI.Mulatta-1.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
+/home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target CR-5.Mulatta-2 --ref FandM_${1}.ref.ARC_A
+SS_FAS.xz --out ./CR-5.Mulatta-2.${1}.ARC_ASS_FAS.in.xz --chroms ${1}```
+```
+Do analysis
+```
+#!/bin/sh
+#SBATCH --job-name=admixfrog_analysis
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=4:00:00
+#SBATCH --mem=2gb
+#SBATCH --output=admixfrog_analysis.%J.out
+#SBATCH --error=admixfrog_analysis.%J.err
+#SBATCH --account=def-ben
+
+# execute like this:
+# sbatch admixfrog_do_analysis.sh DRR219369_trim_sorted.bam ARC FAS ASS filter_distance
+
+# ARC
+#     Malaya
+#     SM1.Arctoides-1
+#     SM2.Arctoides-2
+# ASS
+#     A20
+#     XH1.Assamensis
+# THI
+#     Tibetan-macaque-NO.3
+# FAS
+#     BGI-CE-4.fascicularis
+# MUL
+#     BGI-96346.mulatta
+#     BGI.Mulatta-1
+#     CR-5.Mulatta-2
+# NEM
+#     PM664.nemestrina
+# NIG
+#     PF660.nigra
+# TON
+#     PM592.tonkeana
+
+
+module load nixpkgs/16.09 scipy-stack/2019b
+# run the analyses for each chr
+admixfrog --infile ${1}.chr1.in.xz --ref FandM_chr1.ref.${2}_${3}_${4}.xz --out ${1}_chr1_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr2.in.xz --ref FandM_chr2.ref.${2}_${3}_${4}.xz --out ${1}_chr2_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr3.in.xz --ref FandM_chr3.ref.${2}_${3}_${4}.xz --out ${1}_chr3_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr4.in.xz --ref FandM_chr4.ref.${2}_${3}_${4}.xz --out ${1}_chr4_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr5.in.xz --ref FandM_chr5.ref.${2}_${3}_${4}.xz --out ${1}_chr5_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr6.in.xz --ref FandM_chr6.ref.${2}_${3}_${4}.xz --out ${1}_chr6_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr7.in.xz --ref FandM_chr7.ref.${2}_${3}_${4}.xz --out ${1}_chr7_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr8.in.xz --ref FandM_chr8.ref.${2}_${3}_${4}.xz --out ${1}_chr8_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr9.in.xz --ref FandM_chr9.ref.${2}_${3}_${4}.xz --out ${1}_chr9_${2}_${3}_${4}_filter_${5}.out -b 10000 -
+-states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr10.in.xz --ref FandM_chr10.ref.${2}_${3}_${4}.xz --out ${1}_chr10_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr11.in.xz --ref FandM_chr11.ref.${2}_${3}_${4}.xz --out ${1}_chr11_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr12.in.xz --ref FandM_chr12.ref.${2}_${3}_${4}.xz --out ${1}_chr12_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr13.in.xz --ref FandM_chr13.ref.${2}_${3}_${4}.xz --out ${1}_chr13_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr14.in.xz --ref FandM_chr14.ref.${2}_${3}_${4}.xz --out ${1}_chr14_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr15.in.xz --ref FandM_chr15.ref.${2}_${3}_${4}.xz --out ${1}_chr15_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr16.in.xz --ref FandM_chr16.ref.${2}_${3}_${4}.xz --out ${1}_chr16_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr17.in.xz --ref FandM_chr17.ref.${2}_${3}_${4}.xz --out ${1}_chr17_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr18.in.xz --ref FandM_chr18.ref.${2}_${3}_${4}.xz --out ${1}_chr18_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr19.in.xz --ref FandM_chr19.ref.${2}_${3}_${4}.xz --out ${1}_chr19_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+
+admixfrog --infile ${1}.chr20.in.xz --ref FandM_chr20.ref.${2}_${3}_${4}.xz --out ${1}_chr20_${2}_${3}_${4}_filter_${5}.out -b 1000
+0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
+```
