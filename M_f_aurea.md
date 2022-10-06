@@ -243,11 +243,10 @@ Do analysis
 #SBATCH --output=admixfrog_analysis.%J.out
 #SBATCH --error=admixfrog_analysis.%J.err
 #SBATCH --account=def-ben
-```
+
 # execute like this:
 # sbatch admixfrog_do_analysis.sh DRR219369_trim_sorted.bam ARC FAS ASS filter_distance
-```
-```
+
 # ARC
 #     Malaya
 #     SM1.Arctoides-1
@@ -269,7 +268,6 @@ Do analysis
 #     PF660.nigra
 # TON
 #     PM592.tonkeana
-
 
 module load nixpkgs/16.09 scipy-stack/2019b
 # run the analyses for each chr
