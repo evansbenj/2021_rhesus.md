@@ -332,3 +332,9 @@ admixfrog --infile ${1}.chr19.in.xz --ref FandM_chr19.ref.${2}_${3}_${4}.xz --ou
 admixfrog --infile ${1}.chr20.in.xz --ref FandM_chr20.ref.${2}_${3}_${4}.xz --out ${1}_chr20_${2}_${3}_${4}_filter_${5}.out -b 1000
 0 --states ${2} ${3} ${4} --c0 0 --dont-est-contamination --filter-pos ${5}
 ```
+
+# Modifying output files
+I had to modify the chr columns for the output files:
+```
+sed -i '.bak' 's/ch,/chr1,/g' *chr1_*
+```
