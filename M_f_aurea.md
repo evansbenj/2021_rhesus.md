@@ -190,11 +190,13 @@ Make ref file:
 module load  nixpkgs/16.09 scipy-stack/2019b
 
 # make the ref file
+```
 /home/ben/.local/bin/admixfrog-ref --vcf FandM_${1}_mm_1_minQ_30.recode.vcf.gz --out FandM_${1}.ref.ARC_ASS_FAS.xz --states ARC ASS
  FAS --pop-file pops.yaml --chroms ${1}
 ```
 
 Make a target
+```
 #!/bin/sh
 #SBATCH --job-name=AF_tar
 #SBATCH --nodes=1
