@@ -190,7 +190,6 @@ Make ref file:
 module load  nixpkgs/16.09 scipy-stack/2019b
 
 # make the ref file
-```
 /home/ben/.local/bin/admixfrog-ref --vcf FandM_${1}_mm_1_minQ_30.recode.vcf.gz --out FandM_${1}.ref.ARC_ASS_FAS.xz --states ARC ASS
  FAS --pop-file pops.yaml --chroms ${1}
 ```
@@ -234,7 +233,7 @@ S_FAS.xz --out ./BGI.Mulatta-1.${1}.ARC_ASS_FAS.in.xz --chroms ${1}
 /home/ben/.local/bin/admixfrog-bam --vcfgt FandM_${1}_mm_1_minQ_30.recode.vcf.gz --target CR-5.Mulatta-2 --ref FandM_${1}.ref.ARC_A
 SS_FAS.xz --out ./CR-5.Mulatta-2.${1}.ARC_ASS_FAS.in.xz --chroms ${1}```
 ```
-Do analysis
+# Do analysis
 ```
 #!/bin/sh
 #SBATCH --job-name=admixfrog_analysis
