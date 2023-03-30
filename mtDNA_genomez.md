@@ -91,6 +91,11 @@ Using bam2fastq (https://github.com/jts/bam2fastq)
 ./bam2fastq --aligned --force --strict -o mapped#.fq ../SRR9611188_trim._sorted_mapped_only.bam 
 ```
 ## NOVOplasty (config file below)
+
+path
+```
+/home/ben/projects/rrg-ben/ben/2021_M_f_aurea/bin/NOVOPlasty
+```
 ```
 #!/bin/sh
 #SBATCH --job-name=NOVOplasty
